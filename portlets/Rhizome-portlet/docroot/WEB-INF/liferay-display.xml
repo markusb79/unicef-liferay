@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE display PUBLIC "-//Liferay//DTD Display 6.2.0//EN" "http://www.liferay.com/dtd/liferay-display_6_2_0.dtd">
+
+<display>
+	<category name="Rhizome">
+		<portlet id="Solution Generator"/>
+		<portlet id="Sign-Up"/>
+		<portlet id="SOP-Landing"/>
+		<portlet id="HOT-Polio-Answers"/>
+		<portlet id="RhizomeSearch" />
+  		<portlet id="RhizomeThemeSearch" />
+  		<portlet id="SOPGeneral" />
+  		<portlet id="C4D-Landing"/>
+  		<portlet id="SOP-Checklist"/>
+  		<portlet id="C4D-Checklist"/>
+	</category>
+</display>

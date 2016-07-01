@@ -1,0 +1,544 @@
+<%@page import="com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil"%>
+<%@page import="com.liferay.portlet.documentlibrary.model.DLFileEntry"%>
+<%@page import="com.rhizome.domain.Solution"%>
+<%@page import="com.liferay.portlet.journal.model.JournalArticle"%>
+<%@page import="com.liferay.portlet.journal.service.JournalArticleLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.Layout"%>
+<%@page import="com.liferay.portal.service.LayoutLocalServiceUtil"%>
+<%@page import="com.rhizome.util.SearchUtil"%>
+<%@page import="com.liferay.portal.kernel.json.JSONFactoryUtil"%>
+<%@page import="com.liferay.util.portlet.PortletProps"%>
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
+<%@page import="com.liferay.util.ContentUtil"%>
+<%@page import="com.liferay.portal.kernel.util.Validator"%>
+<%@page import="com.liferay.portal.kernel.util.GetterUtil"%>
+<%@page import="javax.portlet.PortletPreferences"%>
+<%@page import="com.liferay.util.PropertyComparator"%>
+<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.liferay.portal.kernel.search.facet.util.FacetFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.search.facet.config.FacetConfigurationUtil"%>
+<%@page import="com.liferay.portal.kernel.search.facet.config.FacetConfiguration"%>
+<%@page import="java.util.List"%>
+<%@page import="com.liferay.portal.kernel.search.facet.ScopeFacet"%>
+<%@page import="com.liferay.portal.kernel.search.facet.AssetEntriesFacet"%>
+<%@page import="com.liferay.portal.kernel.search.facet.Facet"%>
+<%@page import="com.liferay.portal.kernel.search.QueryConfig"%>
+<%@page import="com.liferay.portal.kernel.util.StringPool"%>
+<%@page import="com.liferay.portal.kernel.search.Hits"%>
+<%@page import="com.liferay.portal.kernel.util.HtmlUtil"%>
+<%@page import="com.liferay.portal.kernel.search.SearchContextFactory"%>
+<%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
+<%@page import="com.liferay.portal.kernel.search.SearchContext"%>
+<%@page import="com.liferay.portal.kernel.dao.search.SearchContainer"%>
+<%@ include file="../init.jsp" %>
+<%@page import="com.liferay.portal.kernel.search.Field"%>
+<%@page import="com.liferay.portal.kernel.search.Document"%>
+<%@page import="com.liferay.portal.kernel.util.WebKeys"%>
+<%@page import="com.liferay.portal.kernel.dao.search.ResultRow"%>
+<%@page import="java.text.SimpleDateFormat" %>
+<%@page import="com.rhizome.util.CommonUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQuery" %>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil" %>
+<%@page import="com.liferay.portal.kernel.portlet.PortletClassLoaderUtil" %>
+<%@page import="com.liferay.portlet.journal.model.JournalFolder" %>
+<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil" %>
+<%@page import="com.liferay.portlet.journal.service.JournalFolderLocalServiceUtil" %>
+
+<%
+
+Hits hits = (Hits)renderRequest.getAttribute("hits");
+
+String[] queryTerms = hits.getQueryTerms();
+
+String sourceField = (String)renderRequest.getAttribute("sourceField");
+String typeField = (String)renderRequest.getAttribute("typeField");
+String stageField = (String)renderRequest.getAttribute("stageField");
+String fieldFrom = (String)renderRequest.getAttribute("fieldFrom");
+String fieldTo = (String)renderRequest.getAttribute("fieldTo");
+String includeTag = (String)renderRequest.getAttribute("includeTag");
+String excludeTag = (String)renderRequest.getAttribute("excludeTag");
+
+String keyword = (String)request.getAttribute("keywords");
+request.setAttribute("search.jsp-queryTerms", queryTerms);
+pageContext.setAttribute("hitList", hits.toList());
+//pageContext.setAttribute("hitListScope", hits.toList().get(0).get("entryClassName"));
+boolean showMenu = true;
+PortletURL searchActionURL = renderResponse.createActionURL();
+int time = (Integer)renderRequest.getAttribute("time");
+String articleDoc = null;
+articleDoc = (String)renderRequest.getAttribute("articleDoc");
+%>
+
+<div class="un-sp-leftpart clearfix">
+        <div class="un-sp-title02">Results</div>
+        <div class="un-sp-resu-linkbox clearfix">
+          <div class="un-sp-resu-link01 clearfix"> 
+          <%
+          searchActionURL.setParameter("action", "filter");
+          searchActionURL.setParameter("entryClassName", JournalArticle.class.getName());
+          searchActionURL.setParameter("keywords", keyword);
+          %>
+          	<a href="javascript:void(0);" onclick="clickArticleFilterURL('<%=searchActionURL.toString()%>','SOP');">
+	          	<span><img src="<%= request.getContextPath() %>/images/sp-icon3.png"></span> 
+	          	<span>SOP ARTICLES</span>
+	            <div class="un-sp-link-value" id="sopArticlesCounter">4</div>
+            </a>
+          </div>
+          
+          <div class="un-sp-resu-link01 clearfix"> 
+          <%
+          searchActionURL.setParameter("action", "filter");
+          searchActionURL.setParameter("entryClassName", JournalArticle.class.getName());
+          searchActionURL.setParameter("keywords", keyword);
+          %>
+          	<a href="javascript:void(0);" onclick="clickArticleFilterURL('<%=searchActionURL.toString()%>','C4D');">
+	          	<span><img src="<%= request.getContextPath() %>/images/sp-icon3.png"></span> 
+	          	<span>C4D ARTICLES</span>
+	            <div class="un-sp-link-value" id="c4dArticlesCounter">4</div>
+            </a>
+          </div>
+          
+          <div class="un-sp-resu-link01 clearfix"> 
+          	<%
+          	searchActionURL.setParameter("action", "filter");
+          	searchActionURL.setParameter("entryClassName", Solution.class.getName());
+          	searchActionURL.setParameter("keywords", keyword);
+          	%>
+          	<%-- <a href="<%=actionURL.toString()%>"> --%>
+          	<a href="javascript:void(0);" onclick="clickActionURL('<%=searchActionURL.toString()%>');">
+	          	<span><img src="<%= request.getContextPath() %>/images/solution-gen-icon.png"></span> 
+	          	<span>Polio Answers</span>
+	            <div class="un-sp-link-value" id="polioAnswersCounter">2</div>
+            </a>
+          </div>
+          <div class="un-sp-resu-link01 clearfix"> 
+          	<%
+	          	searchActionURL.setParameter("action", "filter");
+	          	searchActionURL.setParameter("entryClassName", DLFileEntry.class.getName());
+		        searchActionURL.setParameter("keywords", keyword);
+          	%>
+          	<%-- <a href="<%=actionURL.toString()%>"> --%>
+          	<a href="javascript:void(0);" onclick="clickActionURL('<%=searchActionURL.toString()%>');">
+	          	<span><img src="<%= request.getContextPath() %>/images/sp-icon1.png"></span> 
+	          	<span>Documents</span>
+	          	
+	            <!-- <div class="un-sp-link-value" id="polioAnswersCounter">2</div> -->
+            </a>
+          </div>
+        </div>
+        <div class="un-sp-title02">Filter by:</div>
+        <div class="un-sp-filter-mainbox clearfix">
+          <div class="un-sp-title03" data-toggle="n-collapse" data-target="#filter-date">DATE
+            <div class="sp-filter-link-aero ani-1"><img src="<%= request.getContextPath() %>/images/down-aero-6.png"></div>
+          </div>
+          
+          <div class="un-sp-filter-link01 n-collapse" id="filter-date"> 
+          		<%
+          			String timeFilterClassName = (String)renderRequest.getAttribute("timeFilterEntryClassName");
+          			searchActionURL.setParameter("action", "filter");
+          			searchActionURL.setParameter("keywords", keyword); 
+          			searchActionURL.setParameter("entryClassName", timeFilterClassName);
+          		%>
+          
+          		<a href="javascript:void(0);" onclick="clickTimeFilterURL('<%=searchActionURL.toString()%>', 7);">Last week</a> 
+          		<a href="javascript:void(0);" onclick="clickTimeFilterURL('<%=searchActionURL.toString()%>', 30);">last month</a> 
+          		<a href="javascript:void(0);" onclick="clickTimeFilterURL('<%=searchActionURL.toString()%>', 180);">Last 6 month</a> 
+          		<a href="javascript:void(0);" onclick="clickTimeFilterURL('<%=searchActionURL.toString()%>', 360);">Last year</a> 
+          		<a href="javascript:void(0);" onclick="clickTimeFilterURL('<%=searchActionURL.toString()%>', 361);">Older than 1 year</a> 
+          </div>
+        </div>
+      </div>
+      
+<div class="un-sp-rightpart clearfix">
+<div class="un-sp-title04 clearfix">
+  <!-- <div class="un-sp-title-b1"><span>Showing:</span> <span>20 of 100</span></div>
+  <div class="un-sp-title-b2"><a href="#" class="prev-page">prev.</a> <a href="#" class="next-page">next</a></div> -->
+	<div class="un-sp-title-b1"><span></span> <span></span></div>
+  	<div class="un-sp-title-b2"><span class="prev-page"></span> <span class="next-page"></span></div>
+</div> 
+<div class="clearfix">
+	<% 
+		List<Long> jouId = new ArrayList<Long>(); 
+		int sopArticlesCounter=0;
+		int c4dArticlesCounter=0;
+		int polioAnswerCounter=0;
+		int documentCounter=0;
+	%>
+	<c:if test="${fn:length(hits.toList()) == 0}">
+		<div style="text-align: center;">
+			<img src="<%= request.getContextPath() %>/images/noresults.jpg"> </br>
+			<span style="font: bold 18px/30px arial;">No Result Found</span>
+		</div>
+	</c:if>
+	
+	<c:forEach items="${hitList}" var="searchResults" varStatus="searchIndex">
+		<c:set var="index" value="${searchIndex.count}" />
+		<%
+			int counter = (Integer)pageContext.getAttribute("index") - 1;
+			String className = hits.toList().get(counter).get("entryClassName");
+			String action = hits.toList().get(counter).get("action");
+			String id="";String title="";String description="";String createDate="";
+			
+			PortletURL customPortletURL = null;
+			String friendlyURL = StringPool.BLANK;
+			id = hits.toList().get(counter).get("entryClassPK");
+			String searchResult=StringPool.BLANK;
+			searchResult = "false";
+			pageContext.setAttribute("searchResult", "false");
+			pageContext.setAttribute("polioAnswerCounter", polioAnswerCounter);
+			pageContext.setAttribute("sopArticlesCounter", sopArticlesCounter);
+			pageContext.setAttribute("c4dArticlesCounter", c4dArticlesCounter);
+			boolean timeFlag = true;
+			pageContext.setAttribute("timeFlag", timeFlag);
+			
+			if(className.equalsIgnoreCase(DLFileEntry.class.getName())){
+				createDate = hits.toList().get(counter).get("createDate");
+				title = hits.toList().get(counter).get("title");
+				description = hits.toList().get(counter).get("description");
+				id = hits.toList().get(counter).get("folderId");
+				String fileEntryId = hits.toList().get(counter).get("entryClassPK");
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+				Date date = formatter.parse(createDate);
+				String entreCreateDate = new SimpleDateFormat("MMM dd, YYYY").format(date).toUpperCase();
+				
+				DLFileEntry dlFileEntry = DLFileEntryLocalServiceUtil.getFileEntry(Long.parseLong(fileEntryId));
+				
+				pageContext.setAttribute("title", title);
+				pageContext.setAttribute("description", description);
+				pageContext.setAttribute("createDate", entreCreateDate);
+				
+				friendlyURL = themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/web/guest"
+						+ "/repository?p_p_id=20&p_p_lifecycle=0&p_p_state=normal&p_p_mode=view&"
+						+ "_20_struts_action=%2Fdocument_library%2Fview_file_entry&_20_redirect="
+						+ "http%3A%2F%2F104.245.32.190%3A8080%2Fweb%2Fguest%2Frepository%3Fp_p_id%3D20%"
+						+ "26p_p_lifecycle%3D0%26p_p_state%3Dnormal%26p_p_mode%3Dview%26_20_entryEnd%"
+						+ "3D20%26_20_displayStyle%3D%26_20_viewEntries%3D1%26_20_viewFolders%3D1%"
+						+ "26_20_folderStart%3D0%26_20_action%3DbrowseFolder%26_20_struts_action%3D%"
+						+ "252Fdocument_library%252Fview%26_20_folderEnd%3D20%"
+						+ "26_20_entryStart%3D0%26_20_folderId%3D"+dlFileEntry.getFolderId()+
+						"&_20_fileEntryId="+dlFileEntry.getFileEntryId();
+				
+				pageContext.setAttribute("articleImage", "sp-icon1.png");
+				pageContext.setAttribute("searchResult", "true");
+				pageContext.setAttribute("breadCrumbClassName", "DocumentFileEntry");
+				
+				if(time != 0){
+					Calendar currentDate = Calendar.getInstance();
+					Date endDate = currentDate.getTime();
+					currentDate.add(Calendar.DATE, -time);
+					Date startDate = currentDate.getTime();
+					
+					if(date.after(startDate) && date.before(new Date())){
+						timeFlag=true;
+					}else{
+						timeFlag=false;
+					}
+					pageContext.setAttribute("timeFlag", timeFlag);
+				}else{
+				}
+			}
+			
+			if(className.equalsIgnoreCase(Solution.class.getName())){
+				title = hits.toList().get(counter).get("title");
+				
+				createDate = hits.toList().get(counter).get("createDate");
+				description = hits.toList().get(counter).get("description");
+				
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+				Date date = formatter.parse(createDate);
+				String entreCreateDate = new SimpleDateFormat("MMM dd, YYYY").format(date).toUpperCase();
+
+				pageContext.setAttribute("id", id);
+				pageContext.setAttribute("createDate", entreCreateDate);
+				pageContext.setAttribute("title", title);
+				pageContext.setAttribute("description", description);
+				pageContext.setAttribute("articleImage", "solution-gen-icon.png");//sp-icon1.png
+				pageContext.setAttribute("searchResult", "true");
+				pageContext.setAttribute("breadCrumbClassName", "Solution");
+				/*polioAnswerCounter = polioAnswerCounter+1; 
+				pageContext.setAttribute("polioAnswerCounter", polioAnswerCounter);*/
+				customPortletURL = CommonUtil.createSolutionPortletURL(request, themeDisplay.getPlid(), Long.parseLong(id), themeDisplay.getScopeGroupId());
+				friendlyURL = customPortletURL.toString();
+			
+				if(time != 0){
+					Calendar currentDate = Calendar.getInstance();
+					Date endDate = currentDate.getTime();
+					currentDate.add(Calendar.DATE, -time);
+					Date startDate = currentDate.getTime();
+					
+					if(date.after(startDate) && date.before(new Date())){
+						timeFlag=true;
+						
+						polioAnswerCounter = polioAnswerCounter+1;
+						pageContext.setAttribute("polioAnswerCounter", polioAnswerCounter);
+						
+					}else{
+						timeFlag=false;
+					}
+					pageContext.setAttribute("timeFlag", timeFlag);
+				}else{
+					polioAnswerCounter = polioAnswerCounter+1;
+					pageContext.setAttribute("polioAnswerCounter", polioAnswerCounter);
+				}
+			}
+		  if(className.equalsIgnoreCase(JournalArticle.class.getName())){
+			createDate = hits.toList().get(counter).get("createDate");
+			String articleId = hits.toList().get(counter).get("articleId");
+			long sopFolderId=0;long c4dFolderId=0;
+			
+			List<JournalFolder> journalFolderSOP = new ArrayList<JournalFolder>();
+			List<JournalFolder> journalFolderC4D = new ArrayList<JournalFolder>();
+			
+			DynamicQuery journalFolderQuery = DynamicQueryFactoryUtil.forClass(JournalFolder.class, PortletClassLoaderUtil.getClassLoader());
+			journalFolderQuery.add(PropertyFactoryUtil.forName("groupId").eq(new Long(themeDisplay.getScopeGroupId())));
+			journalFolderQuery.add(PropertyFactoryUtil.forName("companyId").eq(new Long(themeDisplay.getCompanyId())));
+			journalFolderQuery.add(PropertyFactoryUtil.forName("name").eq("SOP"));
+			journalFolderSOP = JournalFolderLocalServiceUtil.dynamicQuery(journalFolderQuery);
+			sopFolderId = journalFolderSOP.get(0).getFolderId();
+			
+			journalFolderQuery = DynamicQueryFactoryUtil.forClass(JournalFolder.class, PortletClassLoaderUtil.getClassLoader());
+			journalFolderQuery.add(PropertyFactoryUtil.forName("groupId").eq(new Long(themeDisplay.getScopeGroupId())));
+			journalFolderQuery.add(PropertyFactoryUtil.forName("companyId").eq(new Long(themeDisplay.getCompanyId())));
+			journalFolderQuery.add(PropertyFactoryUtil.forName("name").eq("C4D"));
+			journalFolderC4D = JournalFolderLocalServiceUtil.dynamicQuery(journalFolderQuery);
+			c4dFolderId = journalFolderC4D.get(0).getFolderId();
+			
+			String currentVersion = hits.toList().get(counter).get("version");
+			double version = JournalArticleLocalServiceUtil.getLatestVersion(themeDisplay.getScopeGroupId(), articleId);
+			JournalArticle journalArticle = JournalArticleLocalServiceUtil.getLatestArticle(Long.parseLong(id));
+			
+			if((sopFolderId == journalArticle.getFolderId() && articleDoc.equalsIgnoreCase("SOP")) || (sopFolderId == journalArticle.getFolderId() && Validator.isNull(articleDoc))){
+				com.liferay.portal.kernel.xml.Document document = SAXReaderUtil.read(journalArticle.getContentByLocale("en_US"));
+				com.liferay.portal.kernel.xml.Node titleNode = document.selectSingleNode("/root/dynamic-element[@name='" + "Title" +"']/dynamic-content");
+				String titleValue = titleNode.getText();
+				if(Double.parseDouble(currentVersion) == version){
+					boolean flag=false;
+					for(Long obj : jouId){
+						if(jouId.contains(Long.parseLong(id))){
+							flag=true;
+						}
+					}
+					if(!flag){
+						id = hits.toList().get(counter).get("entryClassPK");
+						
+						createDate = hits.toList().get(counter).get("createDate");
+						
+						document = SAXReaderUtil.read(journalArticle.getContentByLocale("en_US"));
+						titleNode = document.selectSingleNode("/root/dynamic-element[@name='" + "Title" +"']/dynamic-content");
+						titleValue = titleNode.getText();
+						
+				        com.liferay.portal.kernel.xml.Node articleNode = document.selectSingleNode("/root/dynamic-element[@name='" + "Article" +"']/dynamic-content");
+						/* String descriptionValue = articleNode.getText(); */
+						
+						com.liferay.portal.kernel.xml.Node categoryNode = document.selectSingleNode("/root/dynamic-element[@name='" + "Category" +"']/dynamic-content");
+						String categoryValue = categoryNode.getText(); 
+						
+						SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+						Date date = formatter.parse(createDate);
+						String entreCreateDate = new SimpleDateFormat("MMM dd, YYYY").format(date).toUpperCase();
+						
+						pageContext.setAttribute("id", id);
+						pageContext.setAttribute("createDate", entreCreateDate);
+						pageContext.setAttribute("title", titleValue);
+						//pageContext.setAttribute("description", descriptionValue);
+						pageContext.setAttribute("description", "");
+						pageContext.setAttribute("categoryValue", categoryValue);
+						
+						pageContext.setAttribute("articleImage", "sp-icon3.png");
+						pageContext.setAttribute("searchResult", "true");
+						pageContext.setAttribute("breadCrumbClassName", "SOP");
+						jouId.add(Long.parseLong(id));
+						/* journalArticleCounter = journalArticleCounter+1;
+						pageContext.setAttribute("journalArticleCounter", journalArticleCounter); */
+						customPortletURL = CommonUtil.createSOPPortletURL(request, themeDisplay.getPlid(), Long.parseLong(id), Long.parseLong(id), themeDisplay.getScopeGroupId());
+						friendlyURL = customPortletURL.toString();
+						if(time != 0){
+							
+							Calendar currentDate = Calendar.getInstance();
+							Date endDate = currentDate.getTime();
+							currentDate.add(Calendar.DATE, -time);
+							Date startDate = currentDate.getTime();
+							
+							if(date.after(startDate) && date.before(new Date())){
+								timeFlag=true;
+								sopArticlesCounter = sopArticlesCounter+1;
+								pageContext.setAttribute("sopArticlesCounter", sopArticlesCounter);
+								
+							}else{
+								timeFlag=false;
+							}
+							pageContext.setAttribute("timeFlag", timeFlag);
+						}else{
+							sopArticlesCounter = sopArticlesCounter+1;
+							pageContext.setAttribute("sopArticlesCounter", sopArticlesCounter);
+						}
+						
+					}
+				}				
+			}
+			
+			if((c4dFolderId == journalArticle.getFolderId() && articleDoc.equalsIgnoreCase("C4D") || (c4dFolderId == journalArticle.getFolderId() && Validator.isNull(articleDoc)))){
+				com.liferay.portal.kernel.xml.Document document = SAXReaderUtil.read(journalArticle.getContentByLocale("en_US"));
+				com.liferay.portal.kernel.xml.Node titleNode = document.selectSingleNode("/root/dynamic-element[@name='" + "Title" +"']/dynamic-content");
+				String titleValue = titleNode.getText();
+				if(Double.parseDouble(currentVersion) == version){
+					boolean flag=false;
+					for(Long obj : jouId){
+						if(jouId.contains(Long.parseLong(id))){
+							flag=true;
+						}
+					}
+					if(!flag){
+						id = hits.toList().get(counter).get("entryClassPK");
+						
+						createDate = hits.toList().get(counter).get("createDate");
+						
+						document = SAXReaderUtil.read(journalArticle.getContentByLocale("en_US"));
+						titleNode = document.selectSingleNode("/root/dynamic-element[@name='" + "Title" +"']/dynamic-content");
+						titleValue = titleNode.getText();
+						
+				        com.liferay.portal.kernel.xml.Node articleNode = document.selectSingleNode("/root/dynamic-element[@name='" + "Article" +"']/dynamic-content");
+						/* String descriptionValue = articleNode.getText(); */
+						
+						com.liferay.portal.kernel.xml.Node subCategoryNode = document.selectSingleNode("/root/dynamic-element[@name='" + "Sub-Category" +"']/dynamic-content");
+						String subCategoryValue = subCategoryNode.getText(); 
+						
+						SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+						Date date = formatter.parse(createDate);
+						String entreCreateDate = new SimpleDateFormat("MMM dd, YYYY").format(date).toUpperCase();
+						
+						pageContext.setAttribute("id", id);
+						pageContext.setAttribute("createDate", entreCreateDate);
+						pageContext.setAttribute("title", titleValue);
+						pageContext.setAttribute("description", "");
+						pageContext.setAttribute("categoryValue", subCategoryValue);
+						
+						pageContext.setAttribute("articleImage", "sp-icon3.png");
+						pageContext.setAttribute("searchResult", "true");
+						pageContext.setAttribute("breadCrumbClassName", "C4D");
+						jouId.add(Long.parseLong(id));
+						/* journalArticleCounter = journalArticleCounter+1;
+						pageContext.setAttribute("journalArticleCounter", journalArticleCounter); */
+						customPortletURL = CommonUtil.createC4DPortletURL(request, themeDisplay.getPlid(), Long.parseLong(id), Long.parseLong(id), themeDisplay.getScopeGroupId());
+						friendlyURL = customPortletURL.toString();
+						if(time != 0){
+							Calendar currentDate = Calendar.getInstance();
+							Date endDate = currentDate.getTime();
+							currentDate.add(Calendar.DATE, -time);
+							Date startDate = currentDate.getTime();
+							
+							if(date.after(startDate) && date.before(new Date())){
+								timeFlag=true;
+								c4dArticlesCounter = c4dArticlesCounter+1;
+								pageContext.setAttribute("c4dArticlesCounter", c4dArticlesCounter);
+								
+							}else{
+								timeFlag=false;
+							}
+							pageContext.setAttribute("timeFlag", timeFlag);
+						}else{
+							c4dArticlesCounter = c4dArticlesCounter+1;
+							pageContext.setAttribute("c4dArticlesCounter", c4dArticlesCounter);
+						}
+						
+					}
+				}				
+			}
+		}
+		  
+		%>
+		 <c:if test="${searchResult == 'true' && timeFlag=='true'}">
+			<div class="sp-list-mainbox clearfix">
+			 <c:choose>
+			 	<c:when test="${breadCrumbClassName eq 'DocumentFileEntry'}">
+			 		<a href="<%= friendlyURL %>" target="_blank">	
+			 	</c:when>
+			 	<c:otherwise>
+			 		<a href="<%= friendlyURL %>">
+			 	</c:otherwise>
+			 </c:choose>
+			 
+	            <div class="sp-list-mainbox-head clearfix">
+	            	<div class="sp-list-iconbox"> <span><img src="<%= request.getContextPath() %>/images/${articleImage}"></span> </div>
+		            <div class="sp-list-titlebox clearfix">
+		              <div class="un-sp-title05 clearfix">
+		              	<span>${title}</span> 
+		              	<c:choose>
+		              		<c:when test="${breadCrumbClassName eq 'SOP'}">
+		              			<span>SOP / ${categoryValue} / ${title} </span></div>
+		              		</c:when>
+		              		<c:when test="${breadCrumbClassName eq 'C4D'}">
+		              			<span>C4D / ${categoryValue} / ${title} </span></div>
+		              		</c:when>
+		              		<c:when test="${breadCrumbClassName eq 'Solution'}">
+		              			<span>Polio Answers</span></div>
+		              		</c:when>
+		              		<c:otherwise>
+		              			<span>Document</span></div>
+		              		</c:otherwise>
+		              	</c:choose>
+		              	<div class="un-sp-title06 clearfix">
+		              		<span>DATE</span><span>${createDate}</span>
+		              	</div>
+		            </div>
+		    	    </div>
+		        <div class="sp-list-textbox">${description}</div>
+		        </a>
+	    	</div>
+		</c:if>
+	</c:forEach>
+</div>
+</div>
+	
+
+<script type="text/javascript">
+	var sopArticlesCounter = '${sopArticlesCounter}';
+	var c4dArticlesCounter = '${c4dArticlesCounter}';
+	var polioAnswerCounter = '${polioAnswerCounter}';
+	
+	if(sopArticlesCounter == 0){
+		sopArticlesCounter = '${sopArticlesCount}';
+	}
+	
+	if(c4dArticlesCounter == 0){
+		c4dArticlesCounter = '${c4dArticlesCount}';
+	}
+	
+	if(polioAnswerCounter == 0){
+		polioAnswerCounter = '${polioCounter}';
+	}
+	
+	$("#sopArticlesCounter").text(sopArticlesCounter);
+	$("#c4dArticlesCounter").text(c4dArticlesCounter);
+	$("#polioAnswersCounter").text(polioAnswerCounter);
+	
+	clickActionURL = function(url){
+		if(url.contains("/web/guest/home")){			
+			url = url.replace("/web/guest/home", "/web/guest/search");	
+		}		
+//		window.location.href = url+'&jc='+journalCounter+'&pc='+polioAnswerCounter;
+		window.location.href = url+'&sc='+sopArticlesCounter+'&cc='+c4dArticlesCounter+'&pc='+polioAnswerCounter;
+	}
+	
+	clickTimeFilterURL = function(url, time){
+		window.location.href = url+'&sc='+sopArticlesCounter+'&cc='+c4dArticlesCounter+'&pc='+polioAnswerCounter+'&time='+time;
+	}
+	
+	clickArticleFilterURL = function(url, articleDoc){
+		window.location.href = url+'&sc='+sopArticlesCounter+'&cc='+c4dArticlesCounter+'&pc='+polioAnswerCounter+'&articleDoc='+articleDoc;
+	}
+	
+</script>
+
+<%-- <c:forEach items="${docsMap}" var="doc">
+     <c:set var="astType" value="${doc.key}"/>
+     <c:set var="astValue" value="${doc.value}"/>
+      <%
+      	String assetType = String.valueOf(pageContext.getAttribute("astType"));
+      	String astValue = String.valueOf(pageContext.getAttribute("astValue"));
+       	System.out.println("assetType : "+assetType);
+      	System.out.println("astValue : "+astValue);
+      	System.out.println("-----------------------");
+      %>
+</c:forEach> --%>

@@ -1,0 +1,26 @@
+<div id="loginDiv">
+	<div class="un-login-mainbox clearfix">
+	
+	  <span style="right:5px; z-index:10000; position:absolute; top:5px; color:#fff;">
+	  	<a href="javascript:;" id="close">Close X</a>
+	  </span>
+	  <span id="form-multipart" class="or">OR</span>
+	  <div class="un-login-box01 clearfix">
+	    <div class="un-login-title01 np-desktop-loginfix">Login</div>
+		  <div id="content">
+					#set ($loginPortletId = "58")
+					$theme.runtime($loginPortletId, '', $velocityPortletPreferences.toString())
+					#set ($VOID = $velocityPortletPreferences.reset())
+			  </div>
+	  </div>
+	  
+	  <div class="un-login-box02 clearfix">
+	      <div class="un-login-title01">Sign up</div>
+	      	$theme.runtime('SignUp_WAR_Rhizomeportlet', '', $velocityPortletPreferences.toString())
+			#set ($VOID = $velocityPortletPreferences.reset())
+	  </div>
+	  
+	</div>
+</div>
+
+

@@ -1,0 +1,85 @@
+
+<div class="un-logo">
+    	##<img src="$images_folder/layout_set_logo.png" style="height: 62px;">
+    		#if(!$is_signed_in)
+    		  	<a href="/web/guest/home" title="#language_format ("go-to-x", [$site_name])">
+						    <img alt="$logo_description" src="$site_logo"/>
+				</a>
+			#else
+				<a href="/group/guest/home" title="#language_format ("go-to-x", [$site_name])">
+						    <img alt="$logo_description" src="$site_logo"/>
+				</a>
+			#end
+					
+</div>
+<div class="clearfix">
+<div class="un-menubar clearfix">
+
+    #if($layout.isPublicLayout() || !$layout.isPublicLayout())
+      #foreach ($nav_item in $nav_items)
+			#set ($nav_item_attr_has_popup="")
+			#set ($nav_item_attr_selected="")
+			#set ($nav_item_css_class = "")
+	
+			#if ($nav_item.isSelected())
+				#set ($nav_item_attr_selected="aria-selected='true'")
+				#set ($nav_item_css_class = "un-menu-active")
+			#end
+			
+			#if ($nav_item.hasChildren())
+				#set ($nav_item_attr_has_popup="aria-haspopup='true'")
+			#end
+			
+			#if ($nav_item.getName() != "Home")
+			#if ( $nav_item.getName() == "SOP")
+				<div class="un-menu-mainlink "> 
+					#if($nav_item.isSelected())
+					<a href="$nav_item.getURL()" class="un-menu-active">
+						<div class="un-menu-icon">&nbsp;</div>
+						$nav_item.getName() 
+					</a> 
+					#else
+					<a href="$nav_item.getURL()" class="">
+						<div class="un-menu-icon">&nbsp;</div>
+						$nav_item.getName() 
+					</a>
+					#end
+				</div>	
+			#elseif ( $nav_item.getName() == "C4D")
+				<div class="un-menu-mainlink">
+					#if($nav_item.isSelected())
+					<a href="/web/guest/c4d"  class="un-menu-active" data-toggle="n-collapse" data-target="#c4d-big-submenu" data-collapse-group="myDivs">
+				        <div class="un-menu-icon">&nbsp;</div>
+							$nav_item.getName() 
+					</a> 
+					#else
+					<a href="/web/guest/c4d"  class="" data-toggle="n-collapse" data-target="#c4d-big-submenu" data-collapse-group="myDivs">
+				        <div class="un-menu-icon">&nbsp;</div>
+							$nav_item.getName() 
+					</a> 
+					#end
+					
+				</div>	
+			#elseif( $nav_item.getName() == "DATA" && $is_signed_in)
+				#if($isUserManager)
+					<div class="un-menu-mainlink">
+						#if($nav_item.isSelected())
+						<a href="http://db.rhizome.work" class="un-menu-active" data-toggle="n-collapse" data-target="#data-big-submenu" data-collapse-group="myDivs">
+					        <div class="un-menu-icon">&nbsp;</div>
+								$nav_item.getName() 
+						</a> 
+						#else
+						<a href="http://db.rhizome.work" class="" data-toggle="n-collapse" data-target="#data-big-submenu" data-collapse-group="myDivs">
+					        <div class="un-menu-icon">&nbsp;</div>
+								$nav_item.getName() 
+						</a> 
+						#end
+						 
+					</div>
+				#end	
+			#end
+			#end
+	  #end		
+     #end 
+</div>
+

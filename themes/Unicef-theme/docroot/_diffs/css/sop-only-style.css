@@ -1,0 +1,18 @@
+ @charset "utf-8";
+/* CSS Document */
+
+ #un-navigation-big{ left: 0; position: fixed; right: 0; top: 99px; z-index: 15; border-bottom: 4px solid #fff;}
+ @media only screen and (min-width:1024px) and (max-width:2500px) {
+	.main-container{margin-top:151px;} 
+ }
+ @media only screen and (min-width:1024px) and (max-width:1378px) {
+ .main-container {
+    margin-top: 165px;}
+    
+ }   
+    
+    
+    
+    
+    
+    

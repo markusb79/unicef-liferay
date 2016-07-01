@@ -1,0 +1,384 @@
+#parse ($init)
+
+<!doctype html>
+<html class="$root_css_class" dir="#language ("lang.dir")" lang="$w3c_language_id">
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="$css_folder/boilerplate.css">
+		<link rel="stylesheet" type="text/css" href="$css_folder/template.css">
+		<link rel="stylesheet" type="text/css" href="$css_folder/flexslider.css">
+		<link rel="stylesheet" type="text/css" href="$css_folder/regdev.css">
+		<link rel="stylesheet" type="text/css" href="$css_folder/responsive-style.css">
+		<link rel="stylesheet" type="text/css" href="$css_folder/jquery.fancybox.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="$css_folder/fancySelect.css" media="screen" />
+	
+		<script src="$javascript_folder/jquery-1.11.3.js"></script>
+	    <script src="$javascript_folder/respond.min.js"></script>
+	    <script src="$javascript_folder/rgdev.js"></script>
+	    <script src="$javascript_folder/bs-collaps.js"></script>
+	    <script src="$javascript_folder/jquery.flexslider-min.js"></script>
+	   
+	    <script src="$javascript_folder/plugins.js"></script>
+	    <script type="text/javascript" src="$javascript_folder/jquery.fancybox.js"></script>
+		<script src="$javascript_folder/fancySelect.js"></script>
+		<script src="$javascript_folder/ddscrollspy.js"></script>
+		$theme.include($top_head_include)
+		<title>$the_title - $company_name</title>
+<body class="$css_class">
+	
+		#if ($is_signed_in)
+			#dockbar()
+		#end
+	
+	   $theme.include($body_top_include)
+	
+	   #if (!$is_view_top_most_downloads_portlet)
+			#if($site_type != "user-site")
+			   <div class="un-header clearfix">
+			   		<div class="un-small-menu clearfix n-collapsed" data-toggle="n-collapse" data-target="#un-navigation-small" id="menu-bar">
+				      <div class="un-menuline"></div>
+				      <div class="un-menuline"></div>
+				      <div class="un-menuline"></div>
+				    </div>
+						#if($layout.isPublicLayout())
+			  		   		#if ($has_navigation)
+						 		#parse ("$full_templates_path/navigation.vm")
+					   		#end
+						#elseif ($layout.isPrivateLayout())
+			  		   		#if ($has_navigation)
+						 		#parse ("$full_templates_path/navigation.vm")
+					   		#end
+						#end
+					
+					<div class="un-icons clearfix">
+							#if(!$is_signed_in)
+							<div class="un-icons-external-link">
+								<a href="#loginBox" class="various3">
+								<div class="un-menu-icon">&nbsp;</div>	MYTOOLKIT
+								</a>
+							</div>
+							#else
+							<div class="un-icons-external-link">
+								<a href="javascript:void(0);" data-toggle="n-collapse" data-target="#sop-big-mytoolkit-box" data-collapse-group="myDivs">
+									<div class="un-menu-icon">&nbsp;</div> MYTOOLKIT
+								</a>
+							</div>
+							#end
+							
+							<div id="sop-big-mytoolkit-box" class="n-collapse clearfix" aria-expanded="false">
+      	<div class="sop-mytoolkit-link01">
+      	 <a href="#">Bookmarks</a>
+      	 <a href="#">Checklist</a>
+      	 <a href="#">Profile</a>
+        </div>
+      </div>
+							
+							
+							
+							#if(!$is_signed_in)
+	    					<div class="un-chat-icon">
+	    						<a href="#loginBox" id="sign-in" class="various3">
+	    							chat
+	    						</a>
+	    					</div>
+	    					#else
+							#if ( $layout.getFriendlyURL() == "/polio-answer-community")
+								<div class="un-chat-icon un-chat-active">
+							#else
+								<div class="un-chat-icon">
+							#end
+	    					
+	    						<a href="/group/guest/polio-answer-community" >
+	    							chat
+	    						</a>
+	    					</div>
+	    					#end
+		      
+	      			       <div class="un-search-icon">
+	      			       		#if(!$is_signed_in)
+	      			       			<a href="#loginBox" id="search-sign-in" class="various3">
+		      			       			search
+		      			       		</a>
+	      			       		#else
+	      			       			<a href="javascript:void(0);" id="search-box" type="button"  data-toggle="n-collapse" data-target="#un-search-content" data-collapse-group="myDivs">
+		      			       			search
+		      			       		</a>
+	      			       		#end
+	      			       </div>
+					</div>
+					</div>
+			
+	    		 <div id="un-filter-content" class="n-collapse" aria-expanded="false">
+				    <div class="un-filter-links"> <a href="#">24 HOURS</a> <a href="#">72 HOURS</a> <a href="#">14 DAYS</a> <a href="#">15-30 DAYS</a> <a href="#">1 MONTH</a> <a href="#">3-6 MONTHS</a> <a href="#">CLOSE</a> </div>
+				  </div>
+				  <div id="un-search-content" class="n-collapse" aria-expanded="false"  >
+				 #**
+				    <div class="un-search-bar">
+				      <input name="" type="text" placeholder="Type Here">
+				    </div>
+				 *#  
+				   $theme.runtime("RhizomeThemeSearch_WAR_Rhizomeportlet", '', $velocityPortletPreferences.toString())
+				   
+				  </div>
+				</div>
+				#end  
+			#end
+
+
+
+	#if ($is_view_top_most_downloads_portlet)
+	#if($is_signed_in)
+   		<link rel="stylesheet" type="text/css" href="$css_folder/loged-user-style.css">
+   		<style>
+   		.main-container{ margin:152px auto 0 auto;}
+   		
+   		@media only screen and (min-width:300px) and (max-width:767px) {
+   			.main-container{ margin:0 auto;}
+   		}
+   		
+   		</style>
+ 	 #end	
+	<div class="un-header clearfix">
+		#parse ("$full_templates_path/navigation.vm")
+	
+		<div class="un-icons clearfix">
+			#if(!$is_signed_in)
+				<div class="un-icons-external-link">
+					<a href="#loginBox" class="various3">
+						<div class="un-menu-icon">&nbsp;</div>	MYTOOLKIT
+					</a>
+				</div>
+			#else
+				<div class="un-icons-external-link">
+					<a href="javascript:void(0);" data-toggle="n-collapse" data-target="#sop-big-mytoolkit-box" data-collapse-group="myDivs">
+						<div class="un-menu-icon">&nbsp;</div> MYTOOLKIT
+					</a>
+				</div>
+			#end
+							
+							
+			#if(!$is_signed_in)
+				<div class="un-chat-icon">
+					<a href="#loginBox" id="sign-in" class="various3">
+						chat
+					</a>
+				</div>
+	    	#else
+				#if ( $layout.getFriendlyURL() == "/polio-answer-community")
+					<div class="un-chat-icon un-chat-active">
+				#else
+					<div class="un-chat-icon">
+				#end	    					
+						<a href="/group/guest/polio-answer-community" >
+							chat
+						</a>
+	    			</div>
+	    	#end
+		      
+		   <div class="un-search-icon">
+				#if(!$is_signed_in)
+					<a href="#loginBox" id="search-sign-in" class="various3">
+						search
+					</a>
+				#else
+					<a href="javascript:void(0);" id="search-box" type="button"  data-toggle="n-collapse" data-target="#un-search-content" data-collapse-group="myDivs">
+						search
+					</a>
+				#end
+		   </div>
+		</div></div>
+	</div>		
+	
+		<div class="main-container" id="wrapper">
+			<div id="content">
+				   #if ($selectable)
+					$theme.include($content_include)
+				   #else
+					$portletDisplay.recycle()
+				 
+					$portletDisplay.setTitle($the_title)
+				 
+					$theme.wrapPortlet("portlet.vm", $content_include)
+				   #end
+			  </div>
+			  #if ($is_view_top_most_downloads_portlet)
+				 <div id="topMostDownloadContainer">
+				  #set ($topMostDownloadPortletId = "topdownloadsportlet_WAR_Unicefportlet")
+				$theme.runtime($topMostDownloadPortletId, '', $velocityPortletPreferences.toString())
+				#set ($VOID = $velocityPortletPreferences.reset())
+			 </div>
+ 		 #end
+		  <footer id="footer" role="contentinfo"> </footer>
+		</div>
+	#else
+	   <div class="main-container" id="wrapper">
+	 	  <div id="content">
+			   #if ($selectable)
+			   
+			   #if($is_signed_in)
+			   
+			   <style>
+			   @media only screen and (min-width:768px) and (max-width:2500px) {
+			   		.main-container { margin-top:152px;}
+			   }
+			   </style>
+			   
+			   	<link rel="stylesheet" type="text/css" href="$css_folder/loged-user-style.css">
+					#if($theme_display.getURLCurrent().contains("/group/guest/sop") || $theme_display.getURLCurrent().contains("/web/guest/sop"))
+ 
+					<style>
+					#un-navigation-big{ top:152px !important;}
+				 
+					
+					@media only screen and (min-width:1379px) and (max-width:2500px) {
+					.main-container { margin-top: 203px !important;}
+					
+					}
+					 @media only screen and (min-width:1024px) and (max-width:1378px) {
+						 .main-container {
+  							  margin-top:218px !important
+  
+						 } 
+						  @media only screen and (min-width:300px) and (max-width:767px) {
+						 .main-container {
+  							  margin-top:0px !important
+  
+						 }  
+					</style>
+					
+					
+					#end
+				#end
+			 	  #if($theme_display.getURLCurrent().contains("home") ||
+			   		$theme_display.getURLCurrent().equalsIgnoreCase("/"))
+			   		
+					<style>					
+					.main-container #main-content{ display:none !important; visibility:hidden !important; opacity:0;}
+					.main-container #hrefFm{ display:none !important; visibility:hidden !important; }</style>
+
+					#parse ("$full_templates_path/Unicef_home_page.vm")
+				  #end
+				   #if($theme_display.getURLCurrent().contains("/web/guest/sop") || $theme_display.getURLCurrent().contains("/group/guest/sop") )
+					  	<link rel="stylesheet" type="text/css" href="$css_folder/sop-only-style.css">
+					#end
+				  $theme.include($content_include)
+				#else
+				$portletDisplay.recycle()
+				$portletDisplay.setTitle($the_title)
+				$theme.wrapPortlet("portlet.vm", $content_include)
+			    #end
+	    	</div>
+		  #if ($is_view_top_most_downloads_portlet)
+				 <div id="topMostDownloadContainer">
+					#set ($topMostDownloadPortletId = "topdownloadsportlet_WAR_Unicefportlet")
+						$theme.runtime($topMostDownloadPortletId, '', $velocityPortletPreferences.toString())
+					#set ($VOID = $velocityPortletPreferences.reset())
+			   	</div>
+			  #end 
+		  		<footer id="footer" role="contentinfo"></footer>
+		 	</div>
+		  #end
+#parse ("$full_templates_path/clearPopup.vm")
+<div id="loginBox" style="display:none;">
+  	#parse ("$full_templates_path/login-box.vm")
+</div>
+
+$theme.include($body_bottom_include)
+$theme.include($bottom_include)
+
+#if($theme_display.getURLCurrent().contains("SOP") || $theme_display.getURLCurrent().contains("sop") || $theme_display.getURLCurrent().contains("viewMostRecentURL") || $theme_display.getURLCurrent().contains("viewSolution") || $theme_display.getURLCurrent().contains("/web/guest/search") || $theme_display.getURLCurrent().contains("repository"))
+
+#else	
+	<div class="un-footer clearfix"> 
+  		<div class="fr"> 
+		    <a href="#">ABOUT</a>
+		    <a href="#">SITEMAP</a>
+		    <a href="#">REPORT A BUG</a>
+		    <a href="#">CONTACT US</a>
+     	</div>
+ 	</div>
+#end
+
+
+	
+</body>
+<script type="text/javascript">
+		$(document).ready(function() {
+			$('.fancybox').fancybox();
+			$(".various3").fancybox({
+ 				'maxWidth'  : '800', 
+				'minHeight'  : '350',
+ 				'autoScale'			: true,
+				'transitionIn'		: 'elastic',
+				'transitionOut'		: 'elastic',
+ 				'padding' : '0' ,
+ 				'minWidth'  : '280'
+			}); 
+		});
+</script>
+
+ <script>
+
+ 
+     $('#menu-bar').on('click',function(){
+ 		     if ($('#main-div').hasClass( "un-left-menufixer" ) ) {
+				 $('#main-div').removeClass('un-left-menufixer');
+ 			 } else{
+				 	$('#main-div').addClass('un-left-menufixer');
+			}
+     });
+     
+ 
+    var d = document;
+    var safari = (navigator.userAgent.toLowerCase().indexOf('safari') != -1) ? true : false;
+    var gebtn = function(parEl,child) { return parEl.getElementsByTagName(child); };
+    onload = function() {
+        
+        var body = gebtn(d,'body')[0];
+        body.className = body.className && body.className != '' ? body.className + ' has-js' : 'has-js';
+        
+        if (!d.getElementById || !d.createTextNode) return;
+        var ls = gebtn(d,'label');
+        for (var i = 0; i < ls.length; i++) {
+            var l = ls[i];
+            if (l.className.indexOf('label_') == -1) continue;
+            var inp = gebtn(l,'input')[0];
+            if (l.className == 'label_check') {
+                l.className = (safari && inp.checked == true || inp.checked) ? 'label_check c_on' : 'label_check c_off';
+                l.onclick = check_it;
+            };
+            if (l.className == 'label_radio') {
+                l.className = (safari && inp.checked == true || inp.checked) ? 'label_radio r_on' : 'label_radio r_off';
+                l.onclick = turn_radio;
+            };
+        };
+    };
+    var check_it = function() {
+        var inp = gebtn(this,'input')[0];
+        if (this.className == 'label_check c_off' || (!safari && inp.checked)) {
+            this.className = 'label_check c_on';
+            if (safari) inp.click();
+        } else {
+            this.className = 'label_check c_off';
+            if (safari) inp.click();
+        };
+    };
+    var turn_radio = function() {
+        var inp = gebtn(this,'input')[0];
+        if (this.className == 'label_radio r_off' || inp.checked) {
+            var ls = gebtn(this.parentNode,'label');
+            for (var i = 0; i < ls.length; i++) {
+                var l = ls[i];
+                if (l.className.indexOf('label_radio') == -1)  continue;
+                l.className = 'label_radio r_off';
+            };
+            this.className = 'label_radio r_on';
+            if (safari) inp.click();
+        } else {
+            this.className = 'label_radio r_off';
+            if (safari) inp.click();
+        };
+    }; 
+ </script> 
+</html>
+<link rel="stylesheet" type="text/css" href="$css_folder/custom_new_unicef.css">

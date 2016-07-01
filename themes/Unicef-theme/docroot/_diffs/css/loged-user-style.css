@@ -1,0 +1,10 @@
+ @charset "utf-8";
+/* CSS Document */
+
+@media only screen and (min-width:768px) and (max-width:3000px) {
+ .un-header{ top:53px;}
+ .portlet-dockbar{ position:fixed; top:0px; left:0px; right:0px; z-index:17; }
+ 
+ 
+}
+/*.main-container{ margin-top:152px;}*/

@@ -1,0 +1,57 @@
+@charset "utf-8";
+/* CSS Document */
+
+#wrapper{ padding:0px !important;}
+
+.fancybox-close { display:none !important; }
+
+.aui .un-header ul, .aui .un-header ol, .aui .main-container ul, .aui .main-container ol {
+    margin:0;
+    padding:0;
+}
+
+.aui a {
+    color:inherit ;
+    text-decoration: none;
+}
+
+.aui a:hover, .aui a:focus {
+    color:inherit;
+    text-decoration: none;
+}
+
+.aui form {
+	margin:0px 15px 15px 15px !important;
+}
+
+.portlet-document-library .taglib-ratings.stars .liferay-rating-vote>div, .portlet-document-library-display .taglib-ratings.stars .liferay-rating-vote>div, .portlet-trash .taglib-ratings.stars .liferay-rating-vote>div {
+	width:160px;
+}
+
+.aui select, .aui textarea, .aui input[type="text"], .aui input[type="password"], .aui input[type="datetime"], .aui input[type="datetime-local"], .aui input[type="date"], .aui input[type="month"], .aui input[type="time"], .aui input[type="week"], .aui input[type="number"], .aui input[type="email"], .aui input[type="url"], .aui input[type="search"], .aui input[type="tel"], .aui input[type="color"], .aui .uneditable-input {
+	height:30px !important;	
+}
+
+.aui label { display: block !important; }
+
+/* .aui form { margin:0 0 20px 15px; } */
+
+@media only screen and (min-width:300px) and (max-width:767px) {
+.aui body {
+    padding-left:0;
+    padding-right:0;
+}
+}
+.text-error{
+ border:1px solid #F00;
+}
+
+.aui  #loginPopup .modal{max-width:700px !important;}
+.aui #loginPopup .modal-header{background-color:#D2D9D6; border:none !important;}
+.aui #loginPopup .modal-body{background-color:#D2D9D6; border:none !important;}
+
+.main-container #hrefFm{ margin:0px;}
+@media only screen and (min-width:300px) and (max-width:979px) {
+.navbar-inner .user-avatar-image{ width: 16px;}
+}
+.contenxt-filter-color{ color:#FFFFF !important; }

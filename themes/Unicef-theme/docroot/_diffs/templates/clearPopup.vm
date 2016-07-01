@@ -1,0 +1,38 @@
+<script type="text/javascript">
+function clearLoginPopUp(){
+		removeCssClass($loginPortletId,'login');
+		removeCssClass($loginPortletId,'password');
+		$('#_signupportlet_WAR_IMSPortlets_firstName').val('');
+		$('#_signupportlet_WAR_IMSPortlets_lastName').val('');
+		$('#_signupportlet_WAR_IMSPortlets_prefixId').val('');
+		$('#_signupportlet_WAR_IMSPortlets_zip').val('');
+		$('#_signupportlet_WAR_IMSPortlets_email').val('');
+		$('#_signupportlet_WAR_IMSPortlets_password1').val('');
+		$('#_signupportlet_WAR_IMSPortlets_confirmPass').val('');
+		removeCssClass('SignUp_WAR_Unicefportlet','firstName');
+		removeCssClass('SignUp_WAR_Unicefportlet','lastName');
+		removeCssClass('SignUp_WAR_Unicefportlet','prefixId');
+		removeCssClass('SignUp_WAR_Unicefportlet','zip');
+		removeCssClass('SignUp_WAR_Unicefportlet','email');
+		removeCssClass('SignUp_WAR_Unicefportlet','password1');
+		removeCssClass('SignUp_WAR_Unicefportlet','confirmPass');
+		removeValidatorDivElement();
+	}
+	
+	function removeCssClass(portletId, inputPrefix){
+		if($('#_'+portletId+'_'+inputPrefix).parent().hasClass('success')){
+			$('#_'+portletId+'_'+inputPrefix).parent().removeClass('success');
+		}
+		if($('#_'+portletId+'_'+inputPrefix).parent().hasClass('error')){
+			$('#_'+portletId+'_'+inputPrefix).parent().removeClass('error');
+		}
+	}
+	function removeValidatorDivElement(){
+		if ($(".required").length){
+	   		$(".required").remove();
+		}
+		if($(".form-validator-stack").length){
+			$(".form-validator-stack").remove();
+		}
+	}
+</script>

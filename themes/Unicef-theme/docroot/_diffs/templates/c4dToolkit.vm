@@ -1,0 +1,11 @@
+<div id="c4DToolkitDiv" class="rh-checklist-mainbox" style="position:relative;">
+   <div class="rh-checklist-title01">C4D Toolkit
+      <a href="javascript:void(0);" class="rh-checklist-closebut" onclick="closeFilters();"></a>
+   </div>
+   <div class="mCustomScrollbar np-mcs-content">
+      <div id="refilterC4DData">
+         $theme.runtime('C4D-Checklist_WAR_Rhizomeportlet', '', $velocityPortletPreferences.toString())
+         #set ($VOID = $velocityPortletPreferences.reset())
+      </div>
+   </div>
+</div>

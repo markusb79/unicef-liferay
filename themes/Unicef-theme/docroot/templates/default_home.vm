@@ -1,0 +1,123 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="ie6 oldie"> <![endif]-->
+<!--[if IE 7]>    <html class="ie7 oldie"> <![endif]-->
+<!--[if IE 8]>    <html class="ie8 oldie"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="$root_css_class" dir="#language ("lang.dir")" lang="$w3c_language_id">
+	<head>
+	    <script src="$javascript_folder/jquery-1.10.2.js"></script>
+	    <script src="$javascript_folder/jquery-ui.js"></script>
+	    <script src="$javascript_folder/respond.min.js"></script>
+	    <script src="$javascript_folder/rgdev.js"></script>
+		<title>$the_title - $company_name</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="$css_folder/custom-unicef.css">
+		<link rel="stylesheet" type="text/css" href="$css_folder/jquery-ui.css">
+	    <link rel="stylesheet" type="text/css" href="$css_folder/boilerplate.css">
+	    <link rel="stylesheet" type="text/css" href="$css_folder/template.css">
+	    <link rel="stylesheet" type="text/css" href="$css_folder/responsive-style.css">
+	    <link rel="stylesheet" type="text/css" href="$css_folder/regdev.css">
+	    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+	    <!--[if lt IE 9]>
+			<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		$theme.include($top_head_include)
+	</head>
+	<body class="$css_class">
+	
+	<a href="#main-content" id="skip-to-content">#language ("skip-to-content")</a>
+	
+	$theme.include($body_top_include)
+	
+	#dockbar()
+	#if (!$is_view_top_most_downloads_portlet)
+		  	<div class="np-header clearfix">
+			  <div class="np-logo clearfix">
+				  	<a class="$logo_css_class" href="$site_default_url" title="#language_format ("go-to-x", [$site_name])">
+						#if ($site_type != "user-site")
+						    <img alt="$logo_description" src="$site_logo" width="$site_logo_width"/>
+						#end
+						#if ($show_site_name)
+							<span class="site-name unicef-site-name" title="#language_format ("go-to-x", [$site_name])">
+								$site_name
+							</span>
+						#end
+					</a>	
+			  </div>
+		   #if($site_type != "user-site")
+			  <div class="np-menu-block clearfix">
+			  		<a href="/group/guest/home" class="np-homeicon">home</a> 
+					#if($layout.isPublicLayout())
+					    <a href="/group/guest/video" class="np-videoicon">video</a>
+					    <a href="/group/guest/search" class="np-searchicon">search</a>
+					#elseif ($layout.isPrivateLayout())
+			  		    <a href="/group/guest/video" class="np-videoicon">video</a>
+						<a href="/group/guest/search" class="np-searchicon">search</a>
+						<div class="np-menu-block02">
+			  		   		#if ($has_navigation)
+						 		#parse ("$full_templates_path/navigation.vm")
+					   		#end
+						</div>
+					#end
+			  </div>
+			#end  
+		</div>
+		#end
+
+	#if ($is_view_top_most_downloads_portlet)
+		<div class="container-fluid np-custome-container01" id="wrapper">
+			<div id="content">
+				<div class="np-portlate-fix02">
+				   #if ($selectable)
+					$theme.include($content_include)
+				   #else
+					$portletDisplay.recycle()
+				 
+					$portletDisplay.setTitle($the_title)
+				 
+					$theme.wrapPortlet("portlet.vm", $content_include)
+				   #end
+			   </div>
+			  </div>
+			  #if ($is_view_top_most_downloads_portlet)
+				 <div id="topMostDownloadContainer">
+				  #set ($topMostDownloadPortletId = "topdownloadsportlet_WAR_Unicefportlet")
+				$theme.runtime($topMostDownloadPortletId, '', $velocityPortletPreferences.toString())
+				#set ($VOID = $velocityPortletPreferences.reset())
+			 </div>
+ 		 #end
+		  <footer id="footer" role="contentinfo"> </footer>
+		</div>
+	#else
+	   <div class="container-fluid np-custome-container01" id="wrapper">
+	 	 <div id="content">
+	  		 <div class="np-portlate-fix01">
+			   #if ($selectable)
+				$theme.include($content_include)
+			   #else
+				$portletDisplay.recycle()
+			 
+				$portletDisplay.setTitle($the_title)
+			 
+				$theme.wrapPortlet("portlet.vm", $content_include)
+			   #end
+	  	 </div>
+	  </div>
+		  #if ($is_view_top_most_downloads_portlet)
+			 <div id="topMostDownloadContainer">
+				#set ($topMostDownloadPortletId = "topdownloadsportlet_WAR_Unicefportlet")
+					$theme.runtime($topMostDownloadPortletId, '', $velocityPortletPreferences.toString())
+				#set ($VOID = $velocityPortletPreferences.reset())
+		   	</div>
+		  #end
+	  		<footer id="footer" role="contentinfo"></footer>
+	 	</div>
+	 #end
+	
+	$theme.include($body_bottom_include)
+	
+	$theme.include($bottom_include)
+	
+	</body>
+	</html>

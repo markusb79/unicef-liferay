@@ -1,0 +1,13 @@
+<div id="sopCheckListDiv" class="rh-checklist-mainbox" style="position:relative;">
+	 <div class="rh-checklist-title01">SOP Checklist
+		<a href="javascript:void(0);" onclick="closeFilters();" class="rh-checklist-closebut"></a>
+	 </div>
+	 <div class="mCustomScrollbar np-mcs-content ">
+	 	<div id="refilterData">
+			$theme.runtime('SOP-Checklist_WAR_Rhizomeportlet', '', $velocityPortletPreferences.toString())
+		 	#set ($VOID = $velocityPortletPreferences.reset())
+		</div>	
+	 </div>	 
+</div>
+
+
